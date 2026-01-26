@@ -1,4 +1,5 @@
 import { TIMESLOTS } from '../data/data';
+
 const TimeStep = ({ startTime, setStartTime, endTime, setEndTime, duration }) => {
   return (
     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -8,14 +9,14 @@ const TimeStep = ({ startTime, setStartTime, endTime, setEndTime, duration }) =>
       </h3>
 
       <div className="grid grid-cols-2 gap-4">
-        {/* Dropdown Mulai */}
+        {/* 1. Dropdown JAM MULAI */}
         <div>
           <label className="text-xs text-gray-500 mb-1 block">Start Time</label>
           <select
             className="w-full p-3 border border-gray-200 rounded-xl bg-white"
             onChange={(e) => {
               setStartTime(Number(e.target.value));
-              setEndTime(null);
+              setEndTime(null); // Reset jam selesai agar user memilih ulang validasi baru
             }}
             value={startTime || ''}
           >
@@ -31,16 +32,17 @@ const TimeStep = ({ startTime, setStartTime, endTime, setEndTime, duration }) =>
           </select>
         </div>
 
-        {/* Dropdown Selesai */}
+        {/* 2. Dropdown JAM SELESAI */}
         <div>
           <label className="text-xs text-gray-500 mb-1 block">End Time</label>
           <select
             className="w-full p-3 border border-gray-200 rounded-xl bg-white disabled:bg-gray-100"
-            disabled={!startTime}
+            disabled={!startTime} // Matikan input jika Jam Mulai belum dipilih
             onChange={(e) => setEndTime(Number(e.target.value))}
             value={endTime || ''}
           >
             <option value="">END</option>
+            {/* Hanya tampilkan jam yang LEBIH BESAR dari Jam Mulai */}
             {TIMESLOTS.filter((t) => t.value > startTime).map((slot) => (
               <option
                 key={slot.value}
@@ -53,7 +55,7 @@ const TimeStep = ({ startTime, setStartTime, endTime, setEndTime, duration }) =>
         </div>
       </div>
 
-      {/* Tampilan Total Jam & Harga (Muncul kalau sudah valid) */}
+      {/* Tampilan Info Durasi (Hanya muncul jika durasi valid/positif) */}
       {duration > 0 && (
         <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl flex justify-between items-center text-blue-900">
           <div>

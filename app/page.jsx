@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-
+// Import komponen UI (Child Components)
 import ConfirmationScreen from '../components/ConfirmationScreen';
 import SuccessBookingScreen from '../components/SuccessBookingScreen';
 import Header from '../components/Header';
@@ -13,42 +13,49 @@ import BookingButton from '../components/BookingButton';
 import { COURTS, TIMESLOTS } from '../data/data';
 
 export default function Home() {
-  // State untuk menyimpan pilihan user
+  // --- STATE MANAGEMENT (Penyimpanan Data Sementara) ---
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
-  const [startTime, setStartTime] = useState(null);
+  
+  // Menggunakan null untuk angka supaya bisa cek 'sudah dipilih atau belum'
+  const [startTime, setStartTime] = useState(null); 
   const [endTime, setEndTime] = useState(null);
   const [selectedCourt, setSelectedCourt] = useState(null);
-  const [confirmation, setConfirmation] = useState(false);
 
-  const [isBooking, setIsBooking] = useState(false);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
+  // State untuk mengatur tampilan halaman (View State)
+  const [confirmation, setConfirmation] = useState(false); // Munculkan halaman review?
+  const [isBooking, setIsBooking] = useState(false);       // Loading state saat bayar?
+  const [bookingSuccess, setBookingSuccess] = useState(false); // Transaksi sukses?
 
-  const minDate = new Date().toISOString().split('T')[0];
-  const duration = startTime && endTime ? endTime - startTime : 0;
-  const pricePerHour = selectedCourt ? selectedCourt.price : 0;
-  const totalPrice = duration * pricePerHour;
+  // Variabel bantu untuk perhitungan & tampilan
+  const minDate = new Date().toISOString().split('T')[0]; // Ambil tanggal hari ini (YYYY-MM-DD)
+  const duration = startTime && endTime ? endTime - startTime : 0; // Hitung selisih jam
+  const pricePerHour = selectedCourt ? selectedCourt.price : 0;    // Ambil harga dari object court
+  const totalPrice = duration * pricePerHour;                      // Total bayar
+
+  // Mencari Label String (misal "09:00 AM") berdasarkan Value Angka (9)
   const startLabel = TIMESLOTS.find((slot) => slot.value === startTime)?.label;
   const endLabel = TIMESLOTS.find((slot) => slot.value === endTime)?.label;
-
-  // Fungsi saat tombol "Book Now" ditekan
+  
+  // Aksi saat tombol "Pay Now" ditekan
   const handleBooking = () => {
-    // Simulasi loading payment gateway (Bonus Point: UI saja)
-    setIsBooking(true);
+    setIsBooking(true); // Mulai loading spinner
 
+    // Simulasi delay API 
     setTimeout(() => {
-      setConfirmation(false);
-      setIsBooking(false);
-      setBookingSuccess(true);
+      setConfirmation(false); // Tutup layar konfirmasi
+      setIsBooking(false);    // Matikan loading
+      setBookingSuccess(true); // Tampilkan layar sukses
     }, 2000);
   };
 
+  // Aksi membuka layar konfirmasi
   const handleConfirm = () => {
     setConfirmation(true);
   };
 
-  // Reset form untuk reservasi baru
+  // Reset semua data ke awal (untuk booking ulang)
   const resetForm = () => {
     setName('');
     setPhone('');
@@ -61,9 +68,13 @@ export default function Home() {
     setIsBooking(false);
   };
 
+  // --- CONDITIONAL RENDERING (Logika Tampilan) ---
+
+  // Jika user sedang di tahap Konfirmasi
   if (confirmation) {
     return (
       <ConfirmationScreen
+        // Kirim semua data (Props) yang dibutuhkan layar konfirmasi
         startTime={startTime}
         endTime={endTime}
         handleBooking={handleBooking}
@@ -82,7 +93,7 @@ export default function Home() {
     );
   }
 
-  // Tampilan kalau SUKSES booking
+  // Jika user sudah Sukses Bayar
   if (bookingSuccess) {
     return (
       <SuccessBookingScreen
@@ -97,13 +108,13 @@ export default function Home() {
     );
   }
 
-  // Tampilan UTAMA
+  // Tampilan Utama (Formulir Langkah demi Langkah)
   return (
     <main className="min-h-screen bg-white pb-20">
-      {/* Header Sederhana */}
       <Header />
 
       <div className="max-w-md mx-auto px-6 mt-8 space-y-8">
+        {/* Step 1: Input Data Diri */}
         <InformationStep
           name={name}
           setName={setName}
@@ -111,6 +122,7 @@ export default function Home() {
           setPhone={setPhone}
         />
 
+        {/* Step 2: Pilih Tanggal (Muncul hanya jika nama sudah diisi) */}
         {name && phone && (
           <DateStep
             selectedDate={selectedDate}
@@ -119,7 +131,7 @@ export default function Home() {
           />
         )}
 
-        {/* 2. Bagian Pilih Jam (Range) */}
+        {/* Step 3: Pilih Jam (Muncul hanya jika tanggal sudah dipilih) */}
         {selectedDate && (
           <TimeStep
             startTime={startTime}
@@ -130,7 +142,7 @@ export default function Home() {
           />
         )}
 
-        {/* 3. Bagian Pilih Court (Muncul cuma kalau jam sudah dipilih) */}
+        {/* Step 4: Pilih Lapangan (Muncul hanya jika jam selesai sudah dipilih) */}
         {endTime && (
           <CourtStep
             selectedCourt={selectedCourt}
@@ -139,7 +151,7 @@ export default function Home() {
           />
         )}
 
-        {/* 4. Tombol Booking (Muncul kalau semua lengkap) */}
+        {/* Tombol Eksekusi Terakhir */}
         <BookingButton
           name={name}
           phone={phone}

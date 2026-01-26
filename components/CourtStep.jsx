@@ -8,14 +8,14 @@ const CourtStep = ({ selectedCourt, setSelectedCourt, COURTS }) => {
         Select Court
       </h3>
       <div className="space-y-4">
+        {/* Looping data COURTS untuk membuat kartu pilihan */}
         {COURTS.map((courtItem) => (
           <div
             key={courtItem.id}
-            onClick={() => setSelectedCourt(courtItem)}
-            className={`flex items-center gap-4 p-3 rounded-xl border cursor-pointer transition-all
-                    ${selectedCourt?.id === courtItem.id ? 'border-black ring-1 ring-black bg-gray-50' : 'border-gray-200 hover:border-gray-400'}`}
+            onClick={() => setSelectedCourt(courtItem)} // Set court terpilih saat diklik
+            className={`flex items-center gap-4 p-3 rounded-xl border cursor-pointer transition-all ${selectedCourt?.id === courtItem.id ? 'border-black ring-1 ring-black bg-gray-50' : 'border-gray-200 hover:border-gray-400'}`}
           >
-            {/* Gambar Court */}
+            {/* Container Gambar dengan Next/Image */}
             <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-200 shrink-0">
               <Image
                 src={courtItem.image}
@@ -24,6 +24,8 @@ const CourtStep = ({ selectedCourt, setSelectedCourt, COURTS }) => {
                 className="object-cover"
               />
             </div>
+
+            {/* Informasi Text */}
             <div className="flex-1">
               <div className="flex justify-between items-start">
                 <h4 className="font-bold text-gray-900">{courtItem.name}</h4>
