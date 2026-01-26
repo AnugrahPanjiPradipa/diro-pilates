@@ -87,7 +87,7 @@ const ConfirmationScreen = ({ handleBooking, selectedCourt, selectedDate, durati
           <button
             disabled={isBooking}
             onClick={handleBooking}
-            className={`flex-1 py-4 rounded-xl font-bold text-lg transition-all shadow-lg
+            className={`flex-1 py-4 rounded-xl font-bold text-lg transition-all
               ${isBooking ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-black text-white hover:bg-gray-800 active:scale-95'}`}
           >
             {isBooking ? <PulseLoader /> : 'Pay Now'}

@@ -4,7 +4,7 @@ const TimeStep = ({ startTime, setStartTime, endTime, setEndTime, duration }) =>
   return (
     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-        <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+        <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
         Select Duration
       </h3>
 
