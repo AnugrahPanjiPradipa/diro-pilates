@@ -17,35 +17,35 @@ export default function Home() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
-  
+
   // Menggunakan null untuk angka supaya bisa cek 'sudah dipilih atau belum'
-  const [startTime, setStartTime] = useState(null); 
+  const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [selectedCourt, setSelectedCourt] = useState(null);
 
   // State untuk mengatur tampilan halaman (View State)
   const [confirmation, setConfirmation] = useState(false); // Munculkan halaman review?
-  const [isBooking, setIsBooking] = useState(false);       // Loading state saat bayar?
+  const [isBooking, setIsBooking] = useState(false); // Loading state saat bayar?
   const [bookingSuccess, setBookingSuccess] = useState(false); // Transaksi sukses?
 
   // Variabel bantu untuk perhitungan & tampilan
   const minDate = new Date().toISOString().split('T')[0]; // Ambil tanggal hari ini (YYYY-MM-DD)
   const duration = startTime && endTime ? endTime - startTime : 0; // Hitung selisih jam
-  const pricePerHour = selectedCourt ? selectedCourt.price : 0;    // Ambil harga dari object court
-  const totalPrice = duration * pricePerHour;                      // Total bayar
+  const pricePerHour = selectedCourt ? selectedCourt.price : 0; // Ambil harga dari object court
+  const totalPrice = duration * pricePerHour; // Total bayar
 
   // Mencari Label String (misal "09:00 AM") berdasarkan Value Angka (9)
   const startLabel = TIMESLOTS.find((slot) => slot.value === startTime)?.label;
   const endLabel = TIMESLOTS.find((slot) => slot.value === endTime)?.label;
-  
+
   // Aksi saat tombol "Pay Now" ditekan
   const handleBooking = () => {
     setIsBooking(true); // Mulai loading spinner
 
-    // Simulasi delay API 
+    // Simulasi delay API
     setTimeout(() => {
       setConfirmation(false); // Tutup layar konfirmasi
-      setIsBooking(false);    // Matikan loading
+      setIsBooking(false); // Matikan loading
       setBookingSuccess(true); // Tampilkan layar sukses
     }, 2000);
   };
@@ -67,8 +67,6 @@ export default function Home() {
     setConfirmation(false);
     setIsBooking(false);
   };
-
-  // --- CONDITIONAL RENDERING (Logika Tampilan) ---
 
   // Jika user sedang di tahap Konfirmasi
   if (confirmation) {
