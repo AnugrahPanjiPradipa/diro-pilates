@@ -38,17 +38,33 @@ export default function Home() {
   const startLabel = TIMESLOTS.find((slot) => slot.value === startTime)?.label;
   const endLabel = TIMESLOTS.find((slot) => slot.value === endTime)?.label;
 
-  // Aksi saat tombol "Pay Now" ditekan
-  const handleBooking = () => {
-    setIsBooking(true); // Mulai loading spinner
-
-    // Simulasi delay API
-    setTimeout(() => {
-      setConfirmation(false); // Tutup layar konfirmasi
-      setIsBooking(false); // Matikan loading
-      setBookingSuccess(true); // Tampilkan layar sukses
-    }, 2000);
-  };
+const handleBooking = async () => {
+  try {
+    const res = await fetch('/api/payment', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        orderId: `pilates-${Date.now()}`,
+        grossAmount: totalPrice,
+        customerName: name,
+        customerPhone: phone,
+        itemName: selectedCourt?.name,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.token) throw new Error(data.error || "Payment failed");
+    window.snap.pay(data.token, {
+      onSuccess: () => { setConfirmation(false); setIsBooking(false); setBookingSuccess(true); },
+      onPending: () => { setConfirmation(false); setIsBooking(false); setBookingSuccess(true); },
+      onError: () => { setIsBooking(false); alert("Payment failed."); },
+    });
+  } catch (err) {
+    setIsBooking(false);
+    alert(err.message || 'Something went wrong.');
+  }
+};
 
   // Aksi membuka layar konfirmasi
   const handleConfirm = () => {
