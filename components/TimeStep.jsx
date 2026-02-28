@@ -1,10 +1,17 @@
-import { TIMESLOTS } from '../data/data';
-
-const TimeStep = ({ startTime, setStartTime, endTime, setEndTime, duration }) => {
+const TimeStep = ({
+  startTime,
+  setStartTime,
+  endTime,
+  setEndTime,
+  duration,
+  timeslots,
+}) => {
   return (
     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-        <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
+        <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">
+          3
+        </span>
         Select Duration
       </h3>
 
@@ -18,14 +25,11 @@ const TimeStep = ({ startTime, setStartTime, endTime, setEndTime, duration }) =>
               setStartTime(Number(e.target.value));
               setEndTime(null); // Reset jam selesai agar user memilih ulang validasi baru
             }}
-            value={startTime || ''}
+            value={startTime || ""}
           >
             <option value="">START</option>
-            {TIMESLOTS.map((slot) => (
-              <option
-                key={slot.value}
-                value={slot.value}
-              >
+            {timeslots.map((slot) => (
+              <option key={slot.value} value={slot.value}>
                 {slot.label}
               </option>
             ))}
@@ -39,18 +43,17 @@ const TimeStep = ({ startTime, setStartTime, endTime, setEndTime, duration }) =>
             className="w-full p-3 border border-gray-200 rounded-xl bg-white disabled:bg-gray-100"
             disabled={!startTime} // Matikan input jika Jam Mulai belum dipilih
             onChange={(e) => setEndTime(Number(e.target.value))}
-            value={endTime || ''}
+            value={endTime || ""}
           >
             <option value="">END</option>
             {/* Hanya tampilkan jam yang LEBIH BESAR dari Jam Mulai */}
-            {TIMESLOTS.filter((t) => t.value > startTime).map((slot) => (
-              <option
-                key={slot.value}
-                value={slot.value}
-              >
-                {slot.label}
-              </option>
-            ))}
+            {timeslots
+              .filter((t) => t.value > startTime)
+              .map((slot) => (
+                <option key={slot.value} value={slot.value}>
+                  {slot.label}
+                </option>
+              ))}
           </select>
         </div>
       </div>
@@ -61,7 +64,7 @@ const TimeStep = ({ startTime, setStartTime, endTime, setEndTime, duration }) =>
           <div>
             <p className="text-sm font-medium">Total Duration</p>
             <p className="text-xl font-bold">
-              {duration} {duration === 1 ? 'Hour' : 'Hours'}
+              {duration} {duration === 1 ? "Hour" : "Hours"}
             </p>
           </div>
         </div>

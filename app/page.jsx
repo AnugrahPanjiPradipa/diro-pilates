@@ -1,22 +1,24 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from "react";
 // Import komponen UI (Child Components)
-import ConfirmationScreen from '../components/ConfirmationScreen';
-import SuccessBookingScreen from '../components/SuccessBookingScreen';
-import Header from '../components/Header';
-import InformationStep from '../components/InformationStep';
-import DateStep from '../components/DateStep';
-import TimeStep from '../components/TimeStep';
-import CourtStep from '../components/CourtStep';
-import BookingButton from '../components/BookingButton';
-import { COURTS, TIMESLOTS } from '../data/data';
+import ConfirmationScreen from "../components/ConfirmationScreen";
+import SuccessBookingScreen from "../components/SuccessBookingScreen";
+import Header from "../components/Header";
+import InformationStep from "../components/InformationStep";
+import DateStep from "../components/DateStep";
+import TimeStep from "../components/TimeStep";
+import CourtStep from "../components/CourtStep";
+import BookingButton from "../components/BookingButton";
 
 export default function Home() {
+  const [field, setField] = useState([]);
+  const [timeslots, setTimeslots] = useState([]);
+
   // --- STATE MANAGEMENT (Penyimpanan Data Sementara) ---
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
   // Menggunakan null untuk angka supaya bisa cek 'sudah dipilih atau belum'
   const [startTime, setStartTime] = useState(null);
@@ -29,42 +31,75 @@ export default function Home() {
   const [bookingSuccess, setBookingSuccess] = useState(false); // Transaksi sukses?
 
   // Variabel bantu untuk perhitungan & tampilan
-  const minDate = new Date().toISOString().split('T')[0]; // Ambil tanggal hari ini (YYYY-MM-DD)
+  const minDate = new Date().toISOString().split("T")[0]; // Ambil tanggal hari ini (YYYY-MM-DD)
   const duration = startTime && endTime ? endTime - startTime : 0; // Hitung selisih jam
   const pricePerHour = selectedCourt ? selectedCourt.price : 0; // Ambil harga dari object court
   const totalPrice = duration * pricePerHour; // Total bayar
 
-  // Mencari Label String (misal "09:00 AM") berdasarkan Value Angka (9)
-  const startLabel = TIMESLOTS.find((slot) => slot.value === startTime)?.label;
-  const endLabel = TIMESLOTS.find((slot) => slot.value === endTime)?.label;
+  const startLabel = timeslots.find((slot) => slot.value === startTime)?.label;
+  const endLabel = timeslots.find((slot) => slot.value === endTime)?.label;
 
-const handleBooking = async () => {
-  try {
-    const res = await fetch('/api/payment', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        orderId: `pilates-${Date.now()}`,
-        grossAmount: totalPrice,
-        customerName: name,
-        customerPhone: phone,
-        itemName: selectedCourt?.name,
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok || !data.token) throw new Error(data.error || "Payment failed");
-    window.snap.pay(data.token, {
-      onSuccess: () => { setConfirmation(false); setIsBooking(false); setBookingSuccess(true); },
-      onPending: () => { setConfirmation(false); setIsBooking(false); setBookingSuccess(true); },
-      onError: () => { setIsBooking(false); alert("Payment failed."); },
-    });
-  } catch (err) {
-    setIsBooking(false);
-    alert(err.message || 'Something went wrong.');
-  }
-};
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resField = await fetch(
+          "https://daftar-lapangan.free.beeceptor.com/field",
+        );
+        const dataField = await resField.json();
+        setField(dataField);
+
+        const resTime = await fetch(
+          "https://daftar-lapangan.free.beeceptor.com/timeslot",
+        );
+        const dataTime = await resTime.json();
+        setTimeslots(dataTime);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        alert("Connection error");
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleBooking = async () => {
+    try {
+      const res = await fetch("/api/payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderId: `pilates-${Date.now()}`,
+          grossAmount: totalPrice,
+          customerName: name,
+          customerPhone: phone,
+          itemName: selectedCourt?.name,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.token)
+        throw new Error(data.error || "Payment failed");
+      window.snap.pay(data.token, {
+        onSuccess: () => {
+          setConfirmation(false);
+          setIsBooking(false);
+          setBookingSuccess(true);
+        },
+        onPending: () => {
+          setConfirmation(false);
+          setIsBooking(false);
+          setBookingSuccess(true);
+        },
+        onError: () => {
+          setIsBooking(false);
+          alert("Payment failed.");
+        },
+      });
+    } catch (err) {
+      setIsBooking(false);
+      alert(err.message || "Something went wrong.");
+    }
+  };
 
   // Aksi membuka layar konfirmasi
   const handleConfirm = () => {
@@ -73,9 +108,9 @@ const handleBooking = async () => {
 
   // Reset semua data ke awal (untuk booking ulang)
   const resetForm = () => {
-    setName('');
-    setPhone('');
-    setSelectedDate('');
+    setName("");
+    setPhone("");
+    setSelectedDate("");
     setEndTime(null);
     setStartTime(null);
     setSelectedCourt(null);
@@ -153,6 +188,7 @@ const handleBooking = async () => {
             endTime={endTime}
             setEndTime={setEndTime}
             duration={duration}
+            timeslots={timeslots}
           />
         )}
 
@@ -161,7 +197,7 @@ const handleBooking = async () => {
           <CourtStep
             selectedCourt={selectedCourt}
             setSelectedCourt={setSelectedCourt}
-            COURTS={COURTS}
+            field={field}
           />
         )}
 
