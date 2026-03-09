@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Anton, Inter, Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Script from 'next/script';
 
@@ -11,6 +11,18 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+});
+
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-anton", 
+});
+
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +43,7 @@ export default function RootLayout({
           data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
         ></Script>
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${anton.variable} ${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>
   );
 }

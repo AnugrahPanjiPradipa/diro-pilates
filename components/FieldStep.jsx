@@ -1,21 +1,21 @@
 import Image from "next/image";
 
-const CourtStep = ({ selectedCourt, setSelectedCourt, field }) => {
+const FieldStep = ({ selectedField, setSelectedField, field }) => {
   return (
     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
         <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">
           4
         </span>
-        Select Court
+        Select Field
       </h3>
       <div className="space-y-4">
         {/* Looping data COURTS untuk membuat kartu pilihan */}
         {field.map((fieldItem) => (
           <div
             key={fieldItem.id}
-            onClick={() => setSelectedCourt(fieldItem)} // Set court terpilih saat diklik
-            className={`flex items-center gap-4 p-3 rounded-xl border cursor-pointer transition-all ${selectedCourt?.id === fieldItem.id ? "border-black ring-1 ring-black bg-gray-50" : "border-gray-200 hover:border-gray-400"}`}
+            onClick={() => setSelectedField(fieldItem)} // Set court terpilih saat diklik
+            className={`flex items-center gap-4 p-3 rounded-xl border cursor-pointer transition-all ${selectedField?.id === fieldItem.id ? "border-black ring-1 ring-black bg-gray-50" : "border-gray-200 hover:border-gray-400"}`}
           >
             {/* Container Gambar dengan Next/Image */}
             <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-200 shrink-0">
@@ -46,4 +46,4 @@ const CourtStep = ({ selectedCourt, setSelectedCourt, field }) => {
   );
 };
 
-export default CourtStep;
+export default FieldStep;

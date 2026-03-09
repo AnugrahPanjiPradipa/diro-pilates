@@ -1,2 +1,7 @@
 @import "tailwindcss";
 
+.sporty {
+    font-family: var(--font-anton), sans-serif;
+    text-transform: uppercase; 
+}
+

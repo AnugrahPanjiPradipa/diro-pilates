@@ -3,7 +3,7 @@ const BookingButton = ({
   phone,
   selectedDate,
   endTime,
-  selectedCourt,
+  selectedField,
   isBooking,
   handleConfirm,
 }) => {
@@ -16,11 +16,11 @@ const BookingButton = ({
             !phone ||
             !selectedDate ||
             !endTime ||
-            !selectedCourt ||
+            !selectedField ||
             isBooking
           }
           onClick={handleConfirm}
-          className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${!name || !phone || !selectedDate || !endTime || !selectedCourt ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white shadow-lg hover:bg-gPray-800 active:scale-95"}`}
+          className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${!name || !phone || !selectedDate || !endTime || !selectedField ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white shadow-lg hover:bg-gPray-800 active:scale-95"}`}
         >
           Reservation
         </button>
