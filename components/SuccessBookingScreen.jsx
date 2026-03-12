@@ -1,4 +1,12 @@
-const SuccessBookingScreen = ({ name, phone, selectedCourt, selectedDate, startLabel, endLabel, resetForm }) => {
+const SuccessBookingScreen = ({
+  name,
+  phone,
+  selectedDate,
+  fieldName,
+  startLabel,
+  endLabel,
+  resetForm,
+}) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
       <div className="bg-white p-8 rounded-3xl shadow-xl text-center max-w-md w-full border border-gray-100 relative overflow-hidden">
@@ -23,9 +31,12 @@ const SuccessBookingScreen = ({ name, phone, selectedCourt, selectedDate, startL
         </div>
 
         {/* 2. Pesan Utama */}
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">You&apos;re Booked!</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          You&apos;re Booked!
+        </h2>
         <p className="text-gray-500 mb-8">
-          Thanks <span className="font-semibold text-gray-900">{name}</span>, your session is confirmed.
+          Thanks <span className="font-semibold text-gray-900">{name}</span>,
+          your session is confirmed.
         </p>
 
         {/* 3. Ringkasan Tiket (Ticket Summary) */}
@@ -36,17 +47,25 @@ const SuccessBookingScreen = ({ name, phone, selectedCourt, selectedDate, startL
 
           <div className="space-y-4">
             <div>
-              <p className="text-xs text-gray-400 uppercase tracking-wider">Studio</p>
-              <p className="font-bold text-gray-800 text-lg leading-tight">{selectedCourt?.name}</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wider">
+                Studio
+              </p>
+              <p className="font-bold text-gray-800 text-lg leading-tight">
+                {fieldName}
+              </p>
             </div>
 
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-xs text-gray-400 uppercase tracking-wider">Date</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wider">
+                  Date
+                </p>
                 <p className="font-semibold text-gray-800">{selectedDate}</p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-gray-400 uppercase tracking-wider">Time</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wider">
+                  Time
+                </p>
                 <p className="font-semibold text-gray-800">
                   {startLabel} - {endLabel}
                 </p>

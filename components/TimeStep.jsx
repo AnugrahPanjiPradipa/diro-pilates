@@ -1,11 +1,12 @@
-const TimeStep = ({
-  startTime,
-  setStartTime,
-  endTime,
-  setEndTime,
-  duration,
-  timeslots,
-}) => {
+import { useBookingStore } from "@/store/bookingStore";
+
+const TimeStep = ({ duration }) => {
+  const startTime = useBookingStore((state) => state.startTime);
+  const setStartTime = useBookingStore((state) => state.setStartTime);
+  const endTime = useBookingStore((state) => state.endTime);
+  const setEndTime = useBookingStore((state) => state.setEndTime);
+  const timeslots = useBookingStore((state) => state.timeslots);
+
   return (
     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">

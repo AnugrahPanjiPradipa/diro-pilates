@@ -1,12 +1,13 @@
-const BookingButton = ({
-  name,
-  phone,
-  selectedDate,
-  endTime,
-  selectedField,
-  isBooking,
-  handleConfirm,
-}) => {
+import { useBookingStore } from "@/store/bookingStore";
+
+const BookingButton = ({ handleConfirm }) => {
+  const name = useBookingStore((state) => state.name);
+  const phone = useBookingStore((state) => state.phone);
+  const selectedDate = useBookingStore((state) => state.selectedDate);
+  const endTime = useBookingStore((state) => state.endTime);
+  const selectedField = useBookingStore((state) => state.selectedField);
+  const isBooking = useBookingStore((state) => state.isBooking);
+
   return (
     <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 p-4">
       <div className="max-w-md mx-auto">

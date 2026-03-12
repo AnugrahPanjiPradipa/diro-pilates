@@ -1,15 +1,16 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import ConfirmationScreen from "../../../components/ConfirmationScreen";
+import { useBookingStore } from "@/store/bookingStore";
 
 export default function ConfirmPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [field, setField] = useState(null);
-  const [timeslots, setTimeslots] = useState([]);
-  const [isBooking, setIsBooking] = useState(false);
+
+  const { field, timeslots, fetchFields, fetchTimeslots, setIsBooking } =
+    useBookingStore();
 
   // Ambil data dari query params
   const name = searchParams.get("name");
@@ -19,29 +20,20 @@ export default function ConfirmPage() {
   const end = Number(searchParams.get("end"));
   const fieldId = Number(searchParams.get("fieldId"));
 
+  useEffect(() => {
+    fetchFields();
+    fetchTimeslots();
+  }, [fetchFields, fetchTimeslots]);
+
+  const selectedField = field.find((c) => c.id === fieldId) || null;
+
   // Perhitungan harga
   const duration = end - start;
-  const totalPrice = field ? duration * field.price : 0;
+  const totalPrice = selectedField ? duration * selectedField.price : 0;
 
   // Time labels from API (e.g. "09:00 AM", "02:00 PM")
   const startLabel = timeslots.find((s) => s.value === start)?.label ?? "";
   const endLabel = timeslots.find((s) => s.value === end)?.label ?? "";
-
-  const BASE_URL = "https://daftar-lapangan.free.beeceptor.com";
-
-  useEffect(() => {
-    fetch(`${BASE_URL}/field`)
-      .then((res) => res.json())
-      .then((data) => {
-        const found = data.find((c) => c.id === fieldId);
-        setField(found);
-      });
-    fetch(`${BASE_URL}/timeslot`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTimeslots(data);
-      });
-  }, [fieldId]);
 
   const handleBooking = async () => {
     setIsBooking(true);
@@ -54,7 +46,7 @@ export default function ConfirmPage() {
           grossAmount: totalPrice,
           customerName: name,
           customerPhone: phone,
-          itemName: field?.name,
+          itemName: selectedField?.name,
         }),
       });
 
@@ -65,13 +57,13 @@ export default function ConfirmPage() {
       window.snap.pay(data.token, {
         onSuccess: () => {
           setIsBooking(false);
-          const successUrl = `/booking/success?name=${encodeURIComponent(name || "")}&phone=${encodeURIComponent(phone || "")}&date=${encodeURIComponent(date || "")}&start=${start}&end=${end}&fieldId=${fieldId}&fieldName=${encodeURIComponent(field?.name || "")}&startLabel=${encodeURIComponent(startLabel || "")}&endLabel=${encodeURIComponent(endLabel || "")}`;
-          router.push(successUrl);
+          const successUrl = `/booking/success?name=${encodeURIComponent(name || "")}&phone=${encodeURIComponent(phone || "")}&date=${encodeURIComponent(date || "")}&start=${start}&end=${end}&fieldId=${fieldId}&fieldName=${encodeURIComponent(selectedField?.name || "")}&startLabel=${encodeURIComponent(startLabel || "")}&endLabel=${encodeURIComponent(endLabel || "")}`;
+          router.replace(successUrl);
         },
         onPending: () => {
           setIsBooking(false);
-          const successUrl = `/booking/success?name=${encodeURIComponent(name || "")}&phone=${encodeURIComponent(phone || "")}&date=${encodeURIComponent(date || "")}&start=${start}&end=${end}&fieldId=${fieldId}&fieldName=${encodeURIComponent(field?.name || "")}&startLabel=${encodeURIComponent(startLabel || "")}&endLabel=${encodeURIComponent(endLabel || "")}`;
-          router.push(successUrl);
+          const successUrl = `/booking/success?name=${encodeURIComponent(name || "")}&phone=${encodeURIComponent(phone || "")}&date=${encodeURIComponent(date || "")}&start=${start}&end=${end}&fieldId=${fieldId}&fieldName=${encodeURIComponent(selectedField?.name || "")}&startLabel=${encodeURIComponent(startLabel || "")}&endLabel=${encodeURIComponent(endLabel || "")}`;
+          router.replace(successUrl);
         },
         onError: () => {
           setIsBooking(false);
@@ -84,22 +76,18 @@ export default function ConfirmPage() {
     }
   };
 
-  if (!field)
+  if (!selectedField)
     return <div className="p-10 text-center">Memuat konfirmasi...</div>;
 
   return (
     <ConfirmationScreen
-      name={name}
-      phone={phone}
-      selectedDate={date || ""}
       startLabel={startLabel}
       endLabel={endLabel}
-      selectedCourt={field}
+      selectedField={selectedField}
       duration={duration}
-      pricePerHour={field.price}
+      pricePerHour={selectedField.price}
       totalPrice={totalPrice}
       handleBooking={handleBooking}
-      isBooking={isBooking}
       setConfirmation={() => router.back()}
     />
   );

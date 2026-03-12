@@ -1,14 +1,31 @@
-import { PulseLoader } from 'react-spinners';
-import Image from 'next/image';
+import { PulseLoader } from "react-spinners";
+import Image from "next/image";
+import { useBookingStore } from "@/store/bookingStore";
 
-const ConfirmationScreen = ({ handleBooking, selectedCourt, selectedDate, duration, pricePerHour, name, phone, totalPrice, isBooking, setConfirmation, startLabel, endLabel }) => {
+const ConfirmationScreen = ({
+  handleBooking,
+  selectedField,
+  duration,
+  pricePerHour,
+  totalPrice,
+  setConfirmation,
+  startLabel,
+  endLabel,
+}) => {
+  const selectedDate = useBookingStore((state) => state.selectedDate);
+  const name = useBookingStore((state) => state.name);
+  const phone = useBookingStore((state) => state.phone);
+  const isBooking = useBookingStore((state) => state.isBooking);
+
   return (
     <div className="min-h-screen bg-gray-50 pb-32 pt-8 px-6">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="mb-6 text-center gap-2 flex flex-col">
           <h3 className="text-2xl font-bold text-gray-900">Review Booking</h3>
-          <p className="text-sm text-gray-500">Please double check your details</p>
+          <p className="text-sm text-gray-500">
+            Please double check your details
+          </p>
         </div>
 
         {/* TICKET CARD: Bungkus semuanya dalam satu kotak putih cantik */}
@@ -17,15 +34,19 @@ const ConfirmationScreen = ({ handleBooking, selectedCourt, selectedDate, durati
           <div className="p-6 border-b border-gray-100 flex items-center gap-4">
             <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-200 shadow-sm">
               <Image
-                src={selectedCourt?.image}
-                alt={selectedCourt?.name}
+                src={selectedField?.image}
+                alt={selectedField?.name}
                 fill
                 className="object-cover"
               />
             </div>
             <div>
-              <h4 className="font-bold text-lg text-gray-900">{selectedCourt?.name}</h4>
-              <p className="text-sm text-gray-500">IDR {pricePerHour.toLocaleString()}/hour</p>
+              <h4 className="font-bold text-lg text-gray-900">
+                {selectedField?.name}
+              </h4>
+              <p className="text-sm text-gray-500">
+                IDR {pricePerHour.toLocaleString()}/hour
+              </p>
             </div>
           </div>
 
@@ -34,16 +55,20 @@ const ConfirmationScreen = ({ handleBooking, selectedCourt, selectedDate, durati
             {/* Row 1: Date & Time */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Date</label>
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  Date
+                </label>
                 <p className="text-gray-900 font-medium">{selectedDate}</p>
               </div>
               <div>
-                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Time</label>
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  Time
+                </label>
                 <div className="text-gray-900 font-medium">
                   {startLabel} - {endLabel}
                 </div>
                 <div className="text-xs text-blue-600 font-medium mt-1">
-                  ({duration} {duration === 1 ? 'Hour' : 'Hours'})
+                  ({duration} {duration === 1 ? "Hour" : "Hours"})
                 </div>
               </div>
             </div>
@@ -55,11 +80,15 @@ const ConfirmationScreen = ({ handleBooking, selectedCourt, selectedDate, durati
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Guest Name</span>
-                <span className="text-sm font-medium text-gray-900">{name}</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {name}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Phone</span>
-                <span className="text-sm font-medium text-gray-900">{phone}</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {phone}
+                </span>
               </div>
             </div>
           </div>
@@ -67,7 +96,9 @@ const ConfirmationScreen = ({ handleBooking, selectedCourt, selectedDate, durati
           {/* Bagian Bawah: Total Price */}
           <div className="bg-gray-900 p-6 flex justify-between items-center">
             <span className="text-gray-400 text-sm">Total Payment</span>
-            <span className="text-2xl font-bold text-white">IDR {totalPrice.toLocaleString()}</span>
+            <span className="text-2xl font-bold text-white">
+              IDR {totalPrice.toLocaleString()}
+            </span>
           </div>
         </div>
       </div>
@@ -88,9 +119,9 @@ const ConfirmationScreen = ({ handleBooking, selectedCourt, selectedDate, durati
             disabled={isBooking}
             onClick={handleBooking}
             className={`flex-1 py-4 rounded-xl font-bold text-lg transition-all
-              ${isBooking ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-black text-white hover:bg-gray-800 active:scale-95'}`}
+              ${isBooking ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white hover:bg-gray-800 active:scale-95"}`}
           >
-            {isBooking ? <PulseLoader /> : 'Pay Now'}
+            {isBooking ? <PulseLoader /> : "Pay Now"}
           </button>
         </div>
       </div>

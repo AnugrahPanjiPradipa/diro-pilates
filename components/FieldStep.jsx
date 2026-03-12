@@ -1,6 +1,11 @@
 import Image from "next/image";
+import { useBookingStore } from "@/store/bookingStore";
 
-const FieldStep = ({ selectedField, setSelectedField, field }) => {
+const FieldStep = ({}) => {
+  const selectedField = useBookingStore((state) => state.selectedField);
+  const setSelectedField = useBookingStore((state) => state.setSelectedField);
+  const field = useBookingStore((state) => state.field);
+
   return (
     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">

@@ -1,10 +1,17 @@
-import React from 'react';
+import { useBookingStore } from "@/store/bookingStore";
 
-const InformationStep = ({ name, setName, phone, setPhone }) => {
+const InformationStep = () => {
+  const name = useBookingStore((state) => state.name);
+  const setName = useBookingStore((state) => state.setName);
+  const phone = useBookingStore((state) => state.phone);
+  const setPhone = useBookingStore((state) => state.setPhone);
+
   return (
     <section>
       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-        <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+        <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">
+          1
+        </span>
         Fill Your Information
       </h3>
       <div className="gap-2 flex flex-col">

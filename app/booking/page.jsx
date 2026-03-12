@@ -1,41 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import InformationStep from "../../components/InformationStep";
 import DateStep from "../../components/DateStep";
 import TimeStep from "../../components/TimeStep";
-import CourtStep from "../../components/FieldStep";
+import FieldStep from "../../components/FieldStep";
 import BookingButton from "../../components/BookingButton";
+import { useBookingStore } from "@/store/bookingStore";
 
 export default function BookingPage() {
   const router = useRouter();
-  const [field, setField] = useState([]);
-  const [timeslots, setTimeslots] = useState([]);
-
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-  const [selectedField, setSelectedField] = useState(null);
-
-  const BASE_URL = "https://daftar-lapangan.free.beeceptor.com";
+  const {
+    name,
+    phone,
+    selectedDate,
+    startTime,
+    endTime,
+    selectedField,
+    fetchFields,
+    fetchTimeslots,
+  } = useBookingStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const resField = await fetch(`${BASE_URL}/field`);
-        setField(await resField.json());
-        const resTime = await fetch(`${BASE_URL}/timeslot`);
-        setTimeslots(await resTime.json());
-      } catch (err) {
-        console.error("Failed to fetch data:", err);
-      }
-    };
-    fetchData();
-  }, []);
+    fetchFields();
+    fetchTimeslots();
+  }, [fetchFields, fetchTimeslots]);
 
   const handleConfirm = () => {
     const query = new URLSearchParams({
@@ -54,44 +45,15 @@ export default function BookingPage() {
     <main className="min-h-screen bg-white pb-20">
       <Header />
       <div className="max-w-md mx-auto px-6 mt-8 space-y-8">
-        <InformationStep
-          name={name}
-          setName={setName}
-          phone={phone}
-          setPhone={setPhone}
-        />
+        <InformationStep />
         {name && phone && (
-          <DateStep
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            minDate={new Date().toISOString().split("T")[0]}
-          />
+          <DateStep minDate={new Date().toISOString().split("T")[0]} />
         )}
         {selectedDate && (
-          <TimeStep
-            startTime={startTime}
-            setStartTime={setStartTime}
-            endTime={endTime}
-            setEndTime={setEndTime}
-            duration={startTime && endTime ? endTime - startTime : 0}
-            timeslots={timeslots}
-          />
+          <TimeStep duration={startTime && endTime ? endTime - startTime : 0} />
         )}
-        {endTime && (
-          <CourtStep
-            selectedField={selectedField}
-            setSelectedField={setSelectedField}
-            field={field}
-          />
-        )}
-        <BookingButton
-          name={name}
-          phone={phone}
-          selectedDate={selectedDate}
-          endTime={endTime}
-          selectedField={selectedField}
-          handleConfirm={handleConfirm}
-        />
+        {endTime && <FieldStep />}
+        <BookingButton handleConfirm={handleConfirm} />
       </div>
     </main>
   );
