@@ -1,21 +1,44 @@
 import { PulseLoader } from "react-spinners";
 import Image from "next/image";
 import { useBookingStore } from "@/store/bookingStore";
+import { useEffect } from "react";
 
-const ConfirmationScreen = ({
-  handleBooking,
-  selectedField,
-  duration,
-  pricePerHour,
-  totalPrice,
-  setConfirmation,
-  startLabel,
-  endLabel,
-}) => {
-  const selectedDate = useBookingStore((state) => state.selectedDate);
-  const name = useBookingStore((state) => state.name);
-  const phone = useBookingStore((state) => state.phone);
-  const isBooking = useBookingStore((state) => state.isBooking);
+const ConfirmationScreen = ({ handleBooking, setConfirmation }) => {
+  const {
+    name,
+    phone,
+    selectedDate,
+    selectedField,
+    isBooking,
+    getDuration,
+    getPrice,
+    getStartLabel,
+    getEndLabel,
+    fetchFields,
+    fetchTimeslots,
+    getPricePerHour,
+  } = useBookingStore();
+
+  useEffect(() => {
+    fetchFields();
+    fetchTimeslots();
+  }, [fetchFields, fetchTimeslots]);
+
+  const duration = getDuration();
+  const totalPrice = getPrice();
+
+  const startLabel = getStartLabel();
+  const endLabel = getEndLabel();
+
+  const pricePerHour = getPricePerHour();
+
+  if (!selectedField) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <PulseLoader color="#000" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-32 pt-8 px-6">

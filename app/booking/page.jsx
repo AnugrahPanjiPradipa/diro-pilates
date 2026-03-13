@@ -18,7 +18,6 @@ export default function BookingPage() {
     selectedDate,
     startTime,
     endTime,
-    selectedField,
     fetchFields,
     fetchTimeslots,
   } = useBookingStore();
@@ -29,16 +28,7 @@ export default function BookingPage() {
   }, [fetchFields, fetchTimeslots]);
 
   const handleConfirm = () => {
-    const query = new URLSearchParams({
-      name,
-      phone,
-      date: selectedDate,
-      start: startTime,
-      end: endTime,
-      fieldId: selectedField?.id,
-    }).toString();
-
-    router.push(`/booking/confirm?${query}`);
+    router.push("/booking/confirm");
   };
 
   return (
