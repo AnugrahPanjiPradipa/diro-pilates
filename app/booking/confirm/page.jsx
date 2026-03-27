@@ -7,13 +7,8 @@ import { useBookingStore } from "@/store/bookingStore";
 export default function ConfirmPage() {
   const router = useRouter();
 
-  const {
-    name,
-    phone,
-    selectedField,
-    setIsBooking,
-    getPrice,
-  } = useBookingStore();
+  const { name, phone, selectedField, setIsBooking, getPrice } =
+    useBookingStore();
 
   const handleBooking = async () => {
     setIsBooking(true);
@@ -37,11 +32,11 @@ export default function ConfirmPage() {
       window.snap.pay(data.token, {
         onSuccess: () => {
           setIsBooking(false);
-          router.replace("/booking/success");
+          router.push("/booking/success");
         },
         onPending: () => {
           setIsBooking(false);
-          router.replace("/booking/success");
+          router.push("/booking/success");
         },
         onError: () => {
           setIsBooking(false);

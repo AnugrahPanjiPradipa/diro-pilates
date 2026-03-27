@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { supabase } from "@/lib/supabase";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 export const useBookingStore = create(persist(
   (set, get) => ({
@@ -11,6 +11,9 @@ export const useBookingStore = create(persist(
     timeslots: [],
   
     fetchFields: async () => {
+      const { field, isLoading } = get();
+      if (field.length > 0 || isLoading ) return 0;
+
       set({ isLoading: true });
       const { data, error } = await supabase
         .from("fields")
@@ -25,6 +28,8 @@ export const useBookingStore = create(persist(
     },
   
     fetchTimeslots: async () => {
+      const { timeslots, isLoading } = get();
+      if (timeslots.length > 0 || isLoading ) return 0;
       set({ isLoading: true });
       const { data, error } = await supabase.from("timeslots").select("*");
   
@@ -63,6 +68,17 @@ export const useBookingStore = create(persist(
       if(!selectedField) return 0;
       return selectedField.price;
     },
+
+    resetForm: () =>
+      set({
+        name: "",
+        phone: "",
+        selectedDate: "",
+        startTime: null,
+        endTime: null,
+        selectedField: null,
+        isBooking: false,
+      }),
   
     name: "",
     phone: "",
@@ -82,7 +98,9 @@ export const useBookingStore = create(persist(
     setTimeslots: (timeslots) => set({ timeslots }),
     setIsBooking: (isBooking) => set({ isBooking }),
   }),
+  
   {
     name: "booking-storage",
+    storage: createJSONStorage(() => sessionStorage), // Data hilang saat tab ditutup
   }
 ));
