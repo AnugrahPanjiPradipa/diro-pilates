@@ -31,12 +31,9 @@ export default function BookingPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 pb-24 font-sans">
-      {/* Header Area dengan Border Halus & Aksen Emerald */}
       <div className="bg-white sticky top-0 z-30">
-        {/* Aksen garis tipis di paling atas */}
         <div className="h-1 w-full bg-emerald-500"></div>
 
-        {/* Border bawah dibuat sangat tipis (gray-100) bukan hitam */}
         <div className="max-w-md mx-auto px-6 py-6 text-center border-b border-gray-100">
           <h1 className="text-xl font-extrabold text-gray-900 uppercase tracking-tighter">
             Booking Lapangan <span className="text-emerald-600">Minsoc</span>
@@ -48,7 +45,6 @@ export default function BookingPage() {
       </div>
 
       <div className="max-w-md mx-auto px-6 mt-8 space-y-6">
-        {/* Area Form - Dibuat Tanpa Judul Langkah agar Clean */}
         <div className="bg-white p-6 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-50">
           <InformationStep />
         </div>
@@ -73,7 +69,6 @@ export default function BookingPage() {
           </div>
         )}
 
-        {/* Footer Button dengan Glassmorphism effect */}
         <div className="fixed bottom-0 left-0 right-0 bg-white/70 backdrop-blur-lg border-t border-gray-100 p-5 z-20">
           <div className="max-w-md mx-auto">
             <BookingButton handleConfirm={handleConfirm} />
