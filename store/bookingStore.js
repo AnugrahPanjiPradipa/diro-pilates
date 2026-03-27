@@ -11,37 +11,26 @@ export const useBookingStore = create(persist(
     timeslots: [],
   
     fetchFields: async () => {
-      const { field, isLoading } = get();
-      if (field.length > 0 || isLoading ) return 0;
-
+      const { field } = get();
+      if (field.length > 0) return; 
+    
       set({ isLoading: true });
       const { data, error } = await supabase
         .from("fields")
         .select("*")
         .order("id", { ascending: true });
-  
-      set({
-        field: data || [],
-        error,
-        isLoading: false,
-      });
+    
+      set({ field: data || [], error, isLoading: false });
     },
-  
+    
     fetchTimeslots: async () => {
-      const { isLoading } = get();
-      if (isLoading) return; 
+      const { timeslots } = get();
+      if (timeslots.length > 0) return; 
     
       set({ isLoading: true });
-      const { data, error } = await supabase
-        .from("timeslots")
-        .select("*")
-        .order("value", { ascending: true });
+      const { data, error } = await supabase.from("timeslots").select("*");
     
-      set({
-        timeslots: data || [],
-        error,
-        isLoading: false,
-      });
+      set({ timeslots: data || [], error, isLoading: false });
     },
   
     getDuration: () => {
