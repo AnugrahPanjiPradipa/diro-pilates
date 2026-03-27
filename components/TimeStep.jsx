@@ -1,8 +1,16 @@
 import { useBookingStore } from "@/store/bookingStore";
 
 const TimeStep = ({ duration }) => {
-  const { startTime, setStartTime, endTime, setEndTime, timeslots } =
+  const { startTime, setStartTime, endTime, setEndTime, timeslots, isLoading } =
     useBookingStore();
+
+  if (isLoading && timeslots.length === 0) {
+    return (
+      <p className="text-center text-gray-400 text-sm animate-pulse">
+        Loading jadwal...
+      </p>
+    );
+  }
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">

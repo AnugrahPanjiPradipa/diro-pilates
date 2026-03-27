@@ -28,11 +28,15 @@ export const useBookingStore = create(persist(
     },
   
     fetchTimeslots: async () => {
-      const { timeslots, isLoading } = get();
-      if (timeslots.length > 0 || isLoading ) return 0;
+      const { isLoading } = get();
+      if (isLoading) return; 
+    
       set({ isLoading: true });
-      const { data, error } = await supabase.from("timeslots").select("*");
-  
+      const { data, error } = await supabase
+        .from("timeslots")
+        .select("*")
+        .order("value", { ascending: true });
+    
       set({
         timeslots: data || [],
         error,
